@@ -1,6 +1,16 @@
-#include "pwm_lib.h"
-#include <stdio.h>
-#include <stdlib.h>
+//*******************************************
+// 파일명 : gpio.c
+// 작성자 : jude.kwon
+// 작성일 : 24.10.31
+// 수정일 : 24.11.07
+// 
+// 파일설명 : PWM 제어 기능을 위한 함수들을 정의
+//********************************************
+
+
+
+
+#include "pwm.h"
 
 int initialize_pwm(const char *channel_path) {
     FILE *fp;

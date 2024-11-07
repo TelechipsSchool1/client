@@ -1,5 +1,17 @@
-#ifndef PWM_LIB_H
-#define PWM_LIB_H
+//*********************//
+// 파일명 : pwm.h
+// 작성자 : jude.kwon
+// 작성일 : 24.11.07
+//*********************//
+
+
+
+#ifndef PWM_H
+#define PWM_H
+
+#include <stdio.h>
+#include <stdlib.h>
+
 
 // PWM 채널 경로 설정
 #define PWM1_CHANNEL_PATH "/sys/class/pwm/pwmchip0/pwm0"
