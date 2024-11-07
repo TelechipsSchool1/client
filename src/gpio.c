@@ -8,6 +8,7 @@
 //********************************************
 
 #include "gpio.h"
+#include "param.h"
 
 // GPIO 핀 export 함수
 int export_gpio(int gpio) {
@@ -49,4 +50,18 @@ int set_gpio_value(int gpio, int value) {
     fprintf(file, "%d", value);
     fclose(file);
     return 0;
+}
+
+int get_gpio_value(int gpio) {
+    char path[BUFFER_SIZE];
+    char value_str[3];
+    snprintf(path, BUFFER_SIZE, SYSFS_GPIO_DIR "gpio%d/value", gpio);
+    FILE *file = fopen(path, "r");
+    if (!file) {
+        perror("Failed to read GPIO value");
+        return -1;
+    }
+    fgets(value_str, 3, file);
+    fclose(file);
+    return atoi(value_str);
 }
