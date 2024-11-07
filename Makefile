@@ -1,12 +1,18 @@
 .PHONY : clean all compile
 
-CC ?= gcc
+# 컴파일러 설정
+# 크로스 컴파일 사용시 아래코드 주석해제
+CC := aarch64-linux-gnu-gcc
+# 일반 host 컴퓨터에서 사용시 아래 코드 주석해제
+#CC := gcc
+
 CFLAGS = -Ilib
 SRC := $(wildcard src/*.c)
 HDR := $(wildcard lib/*.h)
 OBJ := $(SRC:.c=.o)
 
-TARGET = gpio
+# 실행파일 이름 설정
+TARGET = test
 
 # all 타겟에서 clean과 compile을 순서대로 실행
 all: clean compile

@@ -5,33 +5,23 @@
 //*********************//
 
 #include "gpio.h"
-
-volatile sig_atomic_t quit = 0;  // 종료 플래그
-
-// 종료 시그널 처리 함수
-void int_quit(int sig) {
-    quit = 1;
-    set_gpio_value(TEST_PIN, 0);  // 프로그램 종료 시 핀 출력 0으로 설정
-    printf("Exiting...\n");
-}
+#include "param.h"
+#include "sonic.h"
 
 int main() {
-    struct sigaction sa;
-    sa.sa_handler = int_quit;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    sigaction(SIGINT, &sa, NULL);
 
-    if (export_gpio(TEST_PIN) == -1) return -1;
-    if (set_gpio_direction(TEST_PIN, "out") == -1) return -1;
+    printf("Starting SONIC sensor test. Press Ctrl+C to exit.\n");
 
-    printf("Starting GPIO test. Press Ctrl+C to exit.\n");
+    export_gpio(TRIG_PIN);
+    export_gpio(ECHO_PIN);
 
-    int state = 0;
-    while (!quit) {
-        set_gpio_value(TEST_PIN, state);
-        state = !state;  // 상태 토글 (0 또는 1)
-        sleep(1);  // 1초 대기
+    set_gpio_direction(TRIG_PIN, "out");
+    set_gpio_direction(ECHO_PIN, "in");
+    
+    while (1) {
+        long distance = get_distance();
+        printf("Distance: %ld cm\n", distance);
+        usleep(200000);
     }
 
     printf("Cleanup done. Exiting.\n");
