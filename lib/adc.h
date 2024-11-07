@@ -1,5 +1,21 @@
-#ifndef ADC_LIB_H
-#define ADC_LIB_H
+//*********************//
+// 파일명 : adc.h
+// 작성자 : jude.kwon
+// 작성일 : 24.11.07
+//*********************//
+
+
+
+#ifndef ADC_H
+#define ADC_H
+
+#include <stdio.h>
+#include <fcntl.h>
+#include <linux/i2c-dev.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+#include <stdlib.h>
+
 
 // I2C 장치 및 ADC 주소 설정
 #define I2C_DEVICE "/dev/i2c-1"

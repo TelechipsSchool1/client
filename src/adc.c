@@ -1,10 +1,14 @@
-#include "adc_lib.h"
-#include <stdio.h>
-#include <fcntl.h>
-#include <linux/i2c-dev.h>
-#include <unistd.h>
-#include <sys/ioctl.h>
-#include <stdlib.h>
+//*******************************************
+// 파일명 : adc.c
+// 작성자 : jude.kwon 
+// 작성일 : 24.10.31
+// 수정일 : 24.11.07
+// 
+// 파일설명 : ADC 제어 기능을 위한 함수들을 정의
+//********************************************
+
+
+#include "adc.h"
 
 static int i2c_fd = -1;
 static int filter[FILTER_SIZE] = {0};
