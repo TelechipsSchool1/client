@@ -1,14 +1,14 @@
 .PHONY: clean all compile
 
 # 기본 컴파일러를 ARM64 크로스 컴파일러로 설정
-CC ?= gcc
+CC := aarch64-linux-gnu-gcc
 CFLAGS = -Ilib
 SRC := $(wildcard src/*.c)
 HDR := $(wildcard lib/*.h)
 OBJ := $(patsubst src/%.c, Out/%.o, $(SRC))  # Out 폴더에 객체 파일 생성
 OUT_DIR = Out
 
-TARGET = $(OUT_DIR)/gpio
+TARGET = $(OUT_DIR)/result
 
 # all 타겟에서 clean과 compile을 순서대로 실행
 all: clean compile
