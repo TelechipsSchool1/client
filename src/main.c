@@ -20,11 +20,6 @@
 
 
 
-
-
-
-
-
 int main() {
     // ADC 초기화
     if (initialize_adc(I2C_DEVICE, ADC1_ADDRESS) < 0) {
@@ -44,6 +39,18 @@ int main() {
         return -1;
     }
 
+
+    // 초음파 센서 핀 초기화
+    if (export_gpio(TRIG_PIN) < 0 || set_gpio_direction(TRIG_PIN, "out") < 0) {
+        fprintf(stderr, "Failed to initialize TRIG_PIN for ultrasonic sensor\n");
+        return -1;
+    }
+    
+    if (export_gpio(ECHO_PIN) < 0 || set_gpio_direction(ECHO_PIN, "in") < 0) {
+        fprintf(stderr, "Failed to initialize ECHO_PIN for ultrasonic sensor\n");
+        return -1;
+    }
+    
     int led_state = 0; // LED의 초기 상태 (LOW)
 
     // 주기적으로 데이터를 수집하고 구조체를 통해 출력
@@ -55,19 +62,17 @@ int main() {
         // 데이터 수집
         DataPacket packet = collect_data(LED_GPIO_PIN, led_state);
 
-        // 수집한 데이터 출력
-        printf("ADC Value: %d\n", packet.adc_value);
-        printf("PWM Duty Cycle: %d\n", packet.pwm_duty_cycle);
-        
-        if (packet.distance == -1) {
-            printf("Distance: Ultrasonic sensor not detected or timeout occurred.\n");
-        } else {
-            printf("Distance: %ld cm\n", packet.distance);
-        }
+        // 수집한 데이터를 같은 줄에 출력 (캐리지 리턴 사용)
+        printf("\rADC Value: %d | PWM Duty Cycle: %d | Distance: %ld cm | LED GPIO (PIN %d): %s",
+               packet.adc_value, 
+               packet.pwm_duty_cycle, 
+               packet.distance == -1 ? 0 : packet.distance,
+               LED_GPIO_PIN, 
+               packet.led_state ? "HIGH" : "LOW");
 
-        printf("LED GPIO (PIN %d): %s\n", LED_GPIO_PIN, packet.led_state ? "HIGH" : "LOW");
+        fflush(stdout); // 출력 버퍼를 강제로 비워 화면에 즉시 표시
 
-        sleep(1); // 1초 간격으로 데이터 수집 및 출력
+        usleep(100000); 
     }
 
     return 0;
