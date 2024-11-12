@@ -6,8 +6,6 @@
 // 파일설명 : 센서4가지 데이터 취합
 //********************************************
 
-
-
 #include "data_collect.h"
 #include "adc.h"
 #include "pwm.h"
@@ -17,9 +15,9 @@
 
 DataPacket collect_data(int led_gpio_pin, int current_led_state) {
     DataPacket packet;
-    
+
     // ADC 값 읽기
-    packet.adc_value = get_filtered_adc_value(0);
+    packet.adc_value = read_adc(0);
 
     // ADC 값을 바탕으로 PWM Duty Cycle 계산 및 설정
     packet.pwm_duty_cycle = (packet.adc_value * PWM_MAX_DUTY_CYCLE) / 255;
@@ -33,4 +31,3 @@ DataPacket collect_data(int led_gpio_pin, int current_led_state) {
 
     return packet;
 }
-

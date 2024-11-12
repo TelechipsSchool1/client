@@ -18,8 +18,18 @@
 #define SERVER_PORT 12345          // 서버의 포트 번호
 
 
+<<<<<<< HEAD
+// 핀설정
+//adc : i2c0 사용 중   (pin header 3, 5번 사용 )
+//pwm : pwm0 사용중 (pin header 12번 사용)\
+//초음파 센서 (pin header 7, 11 번 사용)
+//led (pin header 13번 사용)
+
+
+=======
 int setup_server_connection();
 int send_data_to_server(int sock, DataPacket *packet);
+>>>>>>> a3a6eeea6c2c57d12476010570c034613fc312fe
 
 int main() {
     // 서버 연결 설정
@@ -32,12 +42,45 @@ int main() {
     printf("hello\n");
     int led_state = 0;
 
+<<<<<<< HEAD
+    // LED GPIO 핀 초기화
+    if (export_gpio(LED_GPIO_PIN) < 0 || set_gpio_direction(LED_GPIO_PIN, "out") < 0) {
+        fprintf(stderr, "Failed to initialize GPIO for LED\n");
+        return -1;
+    }
+
+
+    // 초음파 센서 핀 초기화
+    if (export_gpio(TRIG_PIN) < 0 || set_gpio_direction(TRIG_PIN, "out") < 0) {
+        fprintf(stderr, "Failed to initialize TRIG_PIN for ultrasonic sensor\n");
+        return -1;
+    }
+    
+    if (export_gpio(ECHO_PIN) < 0 || set_gpio_direction(ECHO_PIN, "in") < 0) {
+        fprintf(stderr, "Failed to initialize ECHO_PIN for ultrasonic sensor\n");
+        return -1;
+    }
+    
+    int led_state = 0; // LED의 초기 상태 (LOW)
+
+    // 주기적으로 데이터를 수집하고 구조체를 통해 출력
+=======
+>>>>>>> a3a6eeea6c2c57d12476010570c034613fc312fe
     while (1) {
         led_state = !led_state;
         set_gpio_value(LED_GPIO_PIN, led_state);
 
         DataPacket packet = collect_data(LED_GPIO_PIN, led_state);
 
+<<<<<<< HEAD
+        // 수집한 데이터를 같은 줄에 출력 (캐리지 리턴 사용)
+        printf("\rADC Value: %d | PWM Duty Cycle: %d | Distance: %ld cm | LED GPIO (PIN %d): %s",
+               packet.adc_value, 
+               packet.pwm_duty_cycle, 
+               packet.distance == -1 ? 0 : packet.distance,
+               LED_GPIO_PIN, 
+               packet.led_state ? "HIGH" : "LOW");
+=======
         // 수집한 데이터 출력
         printf("ADC Value: %d\n", packet.adc_value);
         printf("PWM Duty Cycle: %d\n", packet.pwm_duty_cycle);
@@ -47,9 +90,13 @@ int main() {
         } else {
             printf("Distance: %ld cm\n", packet.distance);
         }
+>>>>>>> a3a6eeea6c2c57d12476010570c034613fc312fe
 
-        printf("LED GPIO (PIN %d): %s\n", LED_GPIO_PIN, packet.led_state ? "HIGH" : "LOW");
+        fflush(stdout); // 출력 버퍼를 강제로 비워 화면에 즉시 표시
 
+<<<<<<< HEAD
+        usleep(100000); 
+=======
         // 서버에 데이터 전송
         if (send_data_to_server(sock, &packet) < 0) {
             fprintf(stderr, "Connection lost. Reconnecting...\n");
@@ -62,6 +109,7 @@ int main() {
         }
 
         sleep(1); // 1초 간격으로 데이터 수집 및 전송
+>>>>>>> a3a6eeea6c2c57d12476010570c034613fc312fe
     }
 
     close(sock); // 프로그램 종료 시 소켓 닫기
