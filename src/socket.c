@@ -6,11 +6,11 @@
 #include "param.h"
 
 
-#define SERVER_IP "192.168.137.7"  // 서버의 IP 주소
+//#define SERVER_IP "192.168.137.7"  // 서버의 IP 주소
 #define SERVER_PORT 12345          // 서버의 포트 번호
 
 // 서버에 대한 소켓 연결을 설정하는 함수
-int setup_server_connection() {
+int setup_server_connection(char* SERVER_IP) {
     int sock;
     struct sockaddr_in server_addr;
 
@@ -53,11 +53,11 @@ int send_data_to_server(int sock, DataPacket *packet) {
 }
 
 // 데이터 전송 및 재연결 로직 함수
-int send_data_with_reconnect(int sock, DataPacket *packet) {
+int send_data_with_reconnect(int sock, DataPacket *packet,char* SERVER_IP) {
     if (send_data_to_server(sock, packet) < 0) {
         fprintf(stderr, "Connection lost. Reconnecting...\n");
         close(sock);
-        sock = setup_server_connection(); // 재연결 시도
+        sock = setup_server_connection(SERVER_IP); // 재연결 시도
         if (sock < 0) {
             fprintf(stderr, "Reconnection failed.\n");
             return -1;

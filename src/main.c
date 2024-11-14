@@ -8,11 +8,17 @@
 #include "param.h"
 #include "device_init.h"
 
-#define LED_GPIO_PIN 85 // LED 토글을 위한 GPIO 핀 번호
+int main(int argc, char* argv[]) {
+    
 
-int main() {
+    if(argc > 2) {
+        fprintf(stderr, "Wrong Server IP addresses\n");
+        return -1;
+    }
+
+    printf("%s\n",argv[1]);
     // 서버 연결 설정
-    int sock = setup_server_connection();
+    int sock = setup_server_connection(argv[1]);
     if (sock < 0) {
         fprintf(stderr, "Failed to connect to server\n");
         return -1;
@@ -41,7 +47,7 @@ int main() {
         print_data(&packet);
 
         // 서버에 데이터 전송
-        if (send_data_with_reconnect(sock, &packet) < 0) {
+        if (send_data_with_reconnect(sock, &packet, argv[1]) < 0) {
             fprintf(stderr, "Reconnection failed. Exiting...\n");
             break;
         }
