@@ -1,24 +1,16 @@
-//*******************************************************
-// 파일명 : socket.c
-// 작성자 : 조경훈
-// 작성일 : 24.11.13
-// 수정일 : 24.11.13
-//
-// 파일설명 : 소켓 데이터 전송을 위한 함수
-//           
-//*******************************************************
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include "socket.h"
+#include "param.h"
 
-#define SERVER_IP "192.168.137.4"  // 서버의 IP 주소
+
+//#define SERVER_IP "192.168.137.7"  // 서버의 IP 주소
 #define SERVER_PORT 12345          // 서버의 포트 번호
 
 // 서버에 대한 소켓 연결을 설정하는 함수
-int setup_server_connection() {
+int setup_server_connection(char* SERVER_IP) {
     int sock;
     struct sockaddr_in server_addr;
 
@@ -61,11 +53,11 @@ int send_data_to_server(int sock, DataPacket *packet) {
 }
 
 // 데이터 전송 및 재연결 로직 함수
-int send_data_with_reconnect(int sock, DataPacket *packet) {
+int send_data_with_reconnect(int sock, DataPacket *packet,char* SERVER_IP) {
     if (send_data_to_server(sock, packet) < 0) {
         fprintf(stderr, "Connection lost. Reconnecting...\n");
         close(sock);
-        sock = setup_server_connection(); // 재연결 시도
+        sock = setup_server_connection(SERVER_IP); // 재연결 시도
         if (sock < 0) {
             fprintf(stderr, "Reconnection failed.\n");
             return -1;
@@ -75,15 +67,12 @@ int send_data_with_reconnect(int sock, DataPacket *packet) {
 }
 
 // 데이터 출력 함수
-void print_data(const DataPacket *packet, int gpio_pin) {
-    printf("ADC Value: %d\n", packet->adc_value);
-    printf("PWM Duty Cycle: %d\n", packet->pwm_duty_cycle);
-
-    if (packet->distance == -1) {
-        printf("Distance: Ultrasonic sensor not detected or timeout occurred.\n");
-    } else {
-        printf("Distance: %ld cm\n", packet->distance);
-    }
-
-    printf("LED GPIO (PIN %d): %s\n", gpio_pin, packet->led_state ? "HIGH" : "LOW");
+void print_data(const DataPacket *packet) {
+    printf("\rADC Value: %d | PWM Duty Cycle: %d | Distance: %ld cm | LED GPIO (PIN %d): %s",
+           packet->adc_value,
+           packet->pwm_duty_cycle,
+           packet->distance == -1 ? 0 : packet->distance,
+           LED_GPIO_PIN,
+           packet->led_state ? "HIGH" : "LOW");
+    fflush(stdout); // 출력 버퍼를 강제로 비워 화면에 즉시 표시
 }
