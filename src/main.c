@@ -28,7 +28,7 @@
 int setup_server_connection();
 int send_data_to_server(int sock, DataPacket *packet);
 
-int main() {
+int main(int argc, char* argv[]) {
 
     // 서버 연결 설정
     int sock = setup_server_connection();
@@ -36,8 +36,6 @@ int main() {
         fprintf(stderr, "Failed to connect to server\n");
         return -1;
     }
-
-    printf("hello\n");
 
     // ADC 초기화
     if (initialize_adc(I2C_DEVICE, ADC1_ADDRESS) < 0) {
