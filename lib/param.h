@@ -14,6 +14,8 @@
 #define SYSFS_GPIO_DIR "/sys/class/gpio/"
 #define BUFFER_SIZE 128
 
+#define LED_GPIO_PIN 85 // LED 토글을 위한 GPIO 핀 번호
+
 // adc param
 #define I2C_DEVICE "/dev/i2c-1"
 #define ADC1_ADDRESS 0x48
