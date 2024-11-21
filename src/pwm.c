@@ -9,7 +9,6 @@
 
 
 
-
 #include "pwm.h"
 
 int initialize_pwm(const char *channel_path) {

@@ -2,7 +2,7 @@
 // 파일명 : param.h
 // 작성자 : 문찬호
 // 작성일 : 24.11.07
-// 수정일 : 24.11.11 (jude kwon)
+// 수정일 : 24.11.21 (jude kwon)
 // 
 // 파일설명 : 센서 제어를 위한 파라미터들을 정의
 //			 ex) 센서 별 어떤 핀을 사용할 것인지 에 대한 설정
@@ -23,6 +23,13 @@
 
 // pwm param
 #define PWM1_CHANNEL_PATH "/sys/class/pwm/pwmchip0/pwm0"
-#define PWM2_CHANNEL_PATH "/sys/class/pwm/pwmchip0/pwm1"
-#define PWM_PERIOD 1000000
-#define PWM_MAX_DUTY_CYCLE PWM_PERIOD
+#define PWM_PERIOD 20000000 // 20ms (50Hz 주기)
+#define PWM_MAX_DUTY_CYCLE 2000000 // 2ms (SG90-HV의 최대 듀티 사이클)
+
+
+// 서보모터 값 
+#define SERVO_NEUTRAL_DUTY_CYCLE 1200000 // 중립값 (정지 상태)
+#define SERVO_MAX_DUTY_CYCLE 1600000    // 최대 시계 방향 속도
+#define SERVO_MIN_DUTY_CYCLE 800000    // 최대 반시계 방향 속도
+
+

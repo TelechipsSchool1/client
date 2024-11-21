@@ -21,7 +21,7 @@ DataPacket collect_data(int led_gpio_pin, int current_led_state) {
 
     // ADC 값을 바탕으로 PWM Duty Cycle 계산 및 설정
     packet.pwm_duty_cycle = (packet.adc_value * PWM_MAX_DUTY_CYCLE) / 255;
-    update_pwm_duty_cycle(PWM1_CHANNEL_PATH, packet.pwm_duty_cycle);
+    packet.pwm_duty_cycle = (packet.adc_value * PWM_MAX_DUTY_CYCLE) / 255;
 
     // 초음파 거리 측정
     packet.distance = get_distance();
@@ -31,3 +31,4 @@ DataPacket collect_data(int led_gpio_pin, int current_led_state) {
 
     return packet;
 }
+
