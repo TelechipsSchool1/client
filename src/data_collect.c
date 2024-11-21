@@ -31,3 +31,4 @@ DataPacket collect_data(int led_gpio_pin, int current_led_state) {
 
     return packet;
 }
+
