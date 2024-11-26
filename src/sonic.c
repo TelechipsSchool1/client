@@ -12,6 +12,18 @@
 #include "gpio.h"
 #include <stddef.h>
 
+int sonic_init() {
+    if (export_gpio(TRIG_PIN) < 0 || set_gpio_direction(TRIG_PIN, "out") < 0) {
+        fprintf(stderr, "Failed to initialize TRIG_PIN for ultrasonic sensor\n");
+        return -1;
+    }
+    if (export_gpio(ECHO_PIN) < 0 || set_gpio_direction(ECHO_PIN, "in") < 0) {
+        fprintf(stderr, "Failed to initialize ECHO_PIN for ultrasonic sensor\n");
+        return -1;
+    }
+    return 0;
+}
+
 long get_distance(void) {
     struct timeval start, end;
     long duration;
