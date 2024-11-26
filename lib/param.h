@@ -2,7 +2,7 @@
 // 파일명 : param.h
 // 작성자 : 문찬호
 // 작성일 : 24.11.07
-// 수정일 : 24.11.21 (jude kwon)
+// 수정일 : 24.11.26 (jude kwon)
 // 
 // 파일설명 : 센서 제어를 위한 파라미터들을 정의
 //			 ex) 센서 별 어떤 핀을 사용할 것인지 에 대한 설정
@@ -12,15 +12,17 @@
 #define PARAM_H
 
 // GPIO 설정
+#define SYSFS_GPIO_DIR "/sys/class/gpio/"
 #define TRIG_PIN 83  // 초음파 TRIGER 사용할 핀
 #define ECHO_PIN 84  // 초음파 ECHO 사용할 핀
-#define SYSFS_GPIO_DIR "/sys/class/gpio/"
+#define VIBRATOR_PIN 112 // 진동 모터 사용 핀
+#define BUZZER_PIN 117 // 부저 사용 핀
 #define BUFFER_SIZE 128
 #define LED_GPIO_PIN 85 // LED 토글을 위한 GPIO 핀 번호
 
 // ADC 설정
 #define I2C_DEVICE "/dev/i2c-1"
-#define ADC1_ADDRESS 0x48
+#define ADC1_ADDRESS 0x48  //zone 1, 3 : 압력센서 , zone 2 : 공기질 센서 
 #define ADC2_ADDRESS 0x49
 
 // PWM 설정
