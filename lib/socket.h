@@ -1,7 +1,7 @@
 #ifndef SOCKET_H
 #define SOCKET_H
 
-#include "data_collect.h"
+//#include "data_collect.h"
 
 // 서버에 대한 소켓 연결을 설정하는 함수
 int setup_server_connection(char* SERVER_IP);

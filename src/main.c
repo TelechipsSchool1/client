@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "socket.h"
-#include "data_collect.h"
 #include "gpio.h"
 #include "adc.h"
 #include "pwm.h"
