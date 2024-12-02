@@ -8,6 +8,8 @@ typedef struct {
     float ultrasonic_distance;  // 초음파 거리
     float temperature;          // 온도
     float humidity;             // 습도
+    float pressure;             // 압력 센서  
+    uint8_t door_status;        //  문 상태 
     uint8_t window_status;      // 창문 상태 (0: 닫힘, 1: 열림)
 } Zone1_3_Data;
 
