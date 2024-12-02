@@ -17,12 +17,14 @@
 #define ECHO_PIN 84  // 초음파 ECHO 사용할 핀
 #define VIBRATOR_PIN 112 // 진동 모터 사용 핀
 #define BUZZER_PIN 117 // 부저 사용 핀
+#define DOOR_STATUS_PIN 113 // 도어상태 핀 
+//#define DHT_SENSOR_PIN 85 // 온습도 핀 
 #define BUFFER_SIZE 128
-#define LED_GPIO_PIN 85 // LED 토글을 위한 GPIO 핀 번호
 
 // ADC 설정
 #define I2C_DEVICE "/dev/i2c-1"
 #define ADC1_ADDRESS 0x48  //zone 1, 3 : 압력센서 , zone 2 : 공기질 센서 
+#define PCF8591_AIN1 0x41
 #define ADC2_ADDRESS 0x49
 
 // PWM 설정
@@ -47,5 +49,8 @@
 #define LED2_PA           0x0D // IR LED Pulse Amplitude
 #define INTERRUPT_STATUS  0x00 // 인터럽트 상태 레지스터
 #define FIFO_DATA         0x07 // FIFO 데이터 레지스터
+
+//압력센서 
+#define FSR406_ADC_CHANNEL 0 // FSR406이 연결된 ADC 채널
 
 #endif // PARAM_H

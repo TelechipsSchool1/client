@@ -5,6 +5,8 @@
 #include "vibrator.h"
 #include "heart.h"
 #include "air_quality.h"
+#include "button.h" 
+#include "pressure.h" 
 
 int initialize_zone1_3() {
     // 서보모터 초기화
@@ -30,6 +32,18 @@ int initialize_zone1_3() {
         fprintf(stderr, "Failed to initialize vibrator motor.\n");
         return -1;
     }
+
+    // 버튼 초기화
+    if (button_init() < 0) {
+        fprintf(stderr, "Failed to initialize button.\n");
+        return -1;
+    }
+
+    //압력센서 초기화 
+    if (initialize_fsr406() < 0) {
+        fprintf(stderr, "Failed to initialize button.\n");
+        return -1;
+    }    
 
     printf("Zone 1, 3 initialized successfully.\n");
     return 0;

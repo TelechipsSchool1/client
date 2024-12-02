@@ -2,7 +2,7 @@
 // 파일명 : adc.c
 // 작성자 : jude.kwon 
 // 작성일 : 24.10.31
-// 수정일 : 24.11.07
+// 수정일 : 24.12.02
 // 
 // 파일설명 : ADC 제어 기능을 위한 함수들을 정의
 //********************************************
@@ -33,7 +33,7 @@ int read_adc(int channel) {
         return -1;
     }
 
-    char config = (channel == 1) ? ADC1_ADDRESS : ADC2_ADDRESS;
+    char config = 0x40+channel;
     if (write(i2c_fd, &config, 1) != 1) {
         perror("ADC write failed");
         return -1;
