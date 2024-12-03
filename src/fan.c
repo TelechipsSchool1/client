@@ -1,5 +1,6 @@
 #include "fan.h"
-#include "param.h"
+#include "pwm.h"
+#include <stdio.h> 
 
 // 팬 초기화
 int fan_init() {
@@ -32,11 +33,11 @@ void fan_set_speed(int speed) {
 
 // 팬 종료
 void fan_stop() {
-    // 팬을 멈추고 PWM disable
-    update_pwm_duty_cycle(PWM1_CHANNEL_PATH, 0);
+    update_pwm_duty_cycle(PWM1_CHANNEL_PATH, 0); // 팬을 정지
 
     char enable_path[256];
     snprintf(enable_path, sizeof(enable_path), "%s/enable", PWM1_CHANNEL_PATH);
+
     FILE *fp = fopen(enable_path, "w");
     if (fp != NULL) {
         fprintf(fp, "0"); // PWM disable

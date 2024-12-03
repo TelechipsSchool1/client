@@ -33,7 +33,7 @@ int read_adc(int channel) {
         return -1;
     }
 
-    char config = (channel == 1) ? ADC1_ADDRESS : ADC2_ADDRESS;
+    char config = 0x40+channel;
     if (write(i2c_fd, &config, 1) != 1) {
         perror("ADC write failed");
         return -1;
