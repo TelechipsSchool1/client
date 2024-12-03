@@ -12,6 +12,7 @@
 #include "init_device.h"
 
 #define SERVER_PORT 12345
+#define SERVER_IP "192.168.137.1" 
 
 // 글로벌 변수
 Zone1_3_Data zone1_3_data = {0};
@@ -193,7 +194,7 @@ int main() {
     struct sockaddr_in server_addr;
     server_addr.sin_family = AF_INET;
     server_addr.sin_port = htons(12345); // 서버 포트
-    server_addr.sin_addr.s_addr = inet_addr("192.168.137.1"); // 서버 IP
+    server_addr.sin_addr.s_addr = inet_addr(SERVER_IP); // 서버 IP
 
     if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
         perror("Connection to server failed");

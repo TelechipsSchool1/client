@@ -20,6 +20,4 @@ typedef struct {
 
 Zone1_3_Data collect_zone1_3_data();
 Zone1_3_Receive_Data collect_zone1_3_receivce_data();
-
-
 #endif // ZONE_DATA_H
