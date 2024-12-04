@@ -2,6 +2,10 @@
 #define ZONE_DATA_H
 
 #include <stdint.h>
+#include "pressure.h"
+#include "sonic.h"
+#include "buzzer.h"
+#include "button.h"
 
 // Zone 1,3 데이터 구조체 및 함수 선언
 typedef struct {
@@ -16,6 +20,7 @@ typedef struct {
 
 typedef struct {
     int window_command; // 창문 여닫기 여부
+    int sleep_alert;
 } Zone1_3_Receive_Data;
 
 Zone1_3_Data collect_zone1_3_data();
