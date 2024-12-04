@@ -1,15 +1,11 @@
 #include <stdio.h>
 #include <pthread.h>
 #include <unistd.h>
-#include "zone_data.h"
-#include "pressure.h"
-#include "sonic.h"
-#include "buzzer.h"
-#include "vibrator.h"
-#include "gpio.h"
-#include "button.h"
 #include <arpa/inet.h>
 #include "init_device.h"
+#include "servo.h"
+#include "zone_data.h"
+#include "vibrator.h"
 
 #define SERVER_PORT 12345
 #define SERVER_IP "192.168.137.1" 
@@ -40,32 +36,19 @@ void print_sensor_data() {
 
 // 데이터 수집 스레드
 void *sensor_data_task(void *arg) {
-
-    int client_sock = *(int*)arg;
+    int client_sock = *(int *)arg;
     struct sockaddr_in client_addr;
     socklen_t addr_len = sizeof(client_addr);
 
     while (1) {
         pthread_mutex_lock(&data_mutex);
 
-        // 초음파 센서 데이터
-        zone1_3_data.ultrasonic_distance = get_distance();
-
-        // 온도와 습도 (임시 값)
-        zone1_3_data.temperature = 22.5; // 온습도 센서 연동 시 수정
-        zone1_3_data.humidity = 55.2;    // 온습도 센서 연동 시 수정
-
-        // 압력 센서 데이터
-        zone1_3_data.pressure = read_fsr406_value();
-
-        // 도어 상태를 버튼 입력에 따라 토글
-        zone1_3_data.door_status = monitor_button_and_toggle_data();
-
-        // 창문 상태를 버튼 입력으로 갱신 (필요 시)
-        zone1_3_data.window_status = zone1_3_data.door_status; // 예시: door_status와 동일하게 처리
+        // `collect_zone1_3_data` 함수 호출로 데이터를 수집(압력, 초음파 , 부저, 버튼)
+        zone1_3_data = collect_zone1_3_data();
 
         pthread_mutex_unlock(&data_mutex);
 
+        // 서버로 데이터 전송
         if (send(client_sock, &zone1_3_data, sizeof(zone1_3_data), 0) < 0) {
             perror("Send failed, closing connection");
             break;
@@ -73,10 +56,7 @@ void *sensor_data_task(void *arg) {
 
         print_sensor_data();
 
-        sleep(1);////////////////////////////////
-
-
-        //usleep(300000); // 0.3초 간격으로 데이터 갱신
+        sleep(1); // 데이터 갱신 주기
     }
     return NULL;
 }
@@ -84,31 +64,51 @@ void *sensor_data_task(void *arg) {
 // 창문 제어 명령 수신 스레드 함수
 void* data_collection_task(void* arg) {
     int client_sock = *(int*)arg; // 클라이언트 소켓 디스크립터
-
     Zone1_3_Receive_Data buffer; // 수신 데이터를 저장할 구조체
-    int bytes_read;
-    while (1) {
+    int previous_command = -1;   // 이전 창문 명령 상태 (-1: 초기 상태)
+    int previous_sleep_alert = -1; // 이전 sleep_alert 상태 (-1: 초기 상태)
 
+    while (1) {
         if (recv(client_sock, &buffer, sizeof(buffer), 0) < 0) {
-            perror("Send failed, closing connection");
+            perror("Recv failed, closing connection");
             break;
         }
 
         pthread_mutex_lock(&command_mutex);
         receive_data = buffer;
-        int window_command = receive_data.window_command; // window_command 읽기
+        int window_command = receive_data.window_command; // 현재 창문 명령
+        int sleep_alert = receive_data.sleep_alert;       // 현재 sleep_alert 상태
         pthread_mutex_unlock(&command_mutex);
 
-        if (window_command == 1) {
-            printf("[main.c] Received Command: OPENING Window\n");
-            servo_set_speed(1, 100); // 시계 방향, 최대 속도로 회전
-            sleep(2);                // 2초 대기
-            servo_set_speed(0, 0);   // 서보모터 정지
-        } else if (window_command == 0) {
-            printf("[main.c] Received Command: CLOSING Window\n");
-            servo_set_speed(-1, 100); // 반시계 방향, 최대 속도로 회전
-            sleep(2);                 // 2초 대기
-            servo_set_speed(0, 0);    // 서보모터 정지
+        // 창문 상태 처리
+        if (window_command != previous_command) {
+            if (window_command == 1) {
+                printf("[main.c] Received Command: OPENING Window\n");
+                zone1_3_data.window_status = 1;  // 창문 상태 갱신
+                servo_set_speed(1, 100);         // 시계 방향, 최대 속도로 회전
+                sleep(2);                        // 2초 대기
+                servo_set_speed(0, 0);           // 서보모터 정지
+            } else if (window_command == 0) {
+                printf("[main.c] Received Command: CLOSING Window\n");
+                zone1_3_data.window_status = 0;  // 창문 상태 갱신
+                servo_set_speed(-1, 100);        // 반시계 방향, 최대 속도로 회전
+                sleep(2);                        // 2초 대기
+                servo_set_speed(0, 0);           // 서보모터 정지
+            }
+            previous_command = window_command; // 현재 명령을 이전 명령으로 저장
+        }
+
+        // sleep_alert 상태 처리
+        if (sleep_alert != previous_sleep_alert) {
+            if (sleep_alert == 1) {
+                printf("[main.c] ALERT: Sleep Alert Received!\n");
+                buzzer_on();
+                vibrator_on();
+                sleep(2); // 2초 동안 알림
+                buzzer_off();
+                vibrator_off();
+            }
+            previous_sleep_alert = sleep_alert; // 현재 상태를 이전 상태로 저장
         }
 
         sleep(1); // 다음 명령까지 대기
@@ -116,14 +116,6 @@ void* data_collection_task(void* arg) {
     return NULL;
 }
 
-// 데이터 출력 스레드
-void *display_task(void *arg) {
-    while (1) {
-        print_sensor_data();
-        sleep(1); // 1초 간격으로 출력
-    }
-    return NULL;
-}
 
 // 부저 및 진동모터 제어 스레드
 void *alert_task(void *arg) {
@@ -154,8 +146,6 @@ void *alert_task(void *arg) {
 int main() {
     zone1_3_data.ID = 1; //zone ID
     pthread_t sensor_thread, display_thread, alert_thread, collection_thread;
-
-
     initialize_zone1_3();
 
     // 뮤텍스 초기화
@@ -207,7 +197,6 @@ int main() {
 
     // 스레드 생성
     pthread_create(&sensor_thread, NULL, sensor_data_task, (void *)&sockfd);
-    //pthread_create(&display_thread, NULL, display_task, NULL);
     pthread_create(&alert_thread, NULL, alert_task, NULL);
     pthread_create(&collection_thread, NULL, data_collection_task, (void *)&sockfd);
 

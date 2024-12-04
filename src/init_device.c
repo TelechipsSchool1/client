@@ -39,7 +39,7 @@ int initialize_zone1_3() {
         return -1;
     }
 
-    //버튼(창문 상태)
+    //버튼(문 상태)
     if (button_init() < 0) {
         fprintf(stderr, "Failed to initialize button.\n");
         return -1;
@@ -49,19 +49,3 @@ int initialize_zone1_3() {
     return 0;
 }
 
-int initialize_zone2() {
-    // 심박수 센서 초기화
-    if (initialize_max30102() < 0) {
-        fprintf(stderr, "Failed to initialize heart rate sensor.\n");
-        return -1;
-    }
-
-    // 공기질 센서 초기화
-    if (air_quality_init(I2C_DEVICE, ADC1_ADDRESS) < 0) {
-        fprintf(stderr, "Failed to initialize air quality sensor.\n");
-        return -1;
-    }
-
-    printf("Zone 2 initialized successfully.\n");
-    return 0;
-}
