@@ -5,6 +5,8 @@
 Zone1_3_Data collect_zone1_3_data() {
     Zone1_3_Data data;
 
+    data.ID = 1;
+
     // 초음파 센서 거리 측정
     data.ultrasonic_distance = get_distance();
 
