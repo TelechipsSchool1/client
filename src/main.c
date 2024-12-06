@@ -8,7 +8,7 @@
 #include "vibrator.h"
 
 #define SERVER_PORT 12345
-#define SERVER_IP "192.168.137.1"
+#define SERVER_IP "192.168.137.5"
 
 // 글로벌 변수
 Zone1_3_Data zone1_3_data = {0};
@@ -42,11 +42,13 @@ void *sensor_data_task(void *arg) {
 
     while (1) {
         pthread_mutex_lock(&data_mutex);
-
         // `collect_zone1_3_data` 함수 호출로 데이터를 수집(압력, 초음파, 부저, 버튼)
+        perror("111");
         zone1_3_data = collect_zone1_3_data();
 
         pthread_mutex_unlock(&data_mutex);
+
+        perror("222");
 
         // 서버로 데이터 전송
         if (send(client_sock, &zone1_3_data, sizeof(zone1_3_data), 0) < 0) {
@@ -65,7 +67,6 @@ void *sensor_data_task(void *arg) {
 void *command_receive_task(void *arg) {
     int client_sock = *(int *)arg; // 클라이언트 소켓 디스크립터
     Zone1_3_Receive_Data buffer;  // 수신 데이터를 저장할 구조체
-
     while (1) {
         if (recv(client_sock, &buffer, sizeof(buffer), 0) < 0) {
             perror("Recv failed, closing connection");
@@ -125,8 +126,8 @@ void *alert_task(void *arg) {
 
     while (1) {
 
-        // 초음파 센서 값이 50cm 이하이고 도어 상태가 1일 때 작동
-        if (zone1_3_data.door_status == 1 && zone1_3_data.ultrasonic_distance > 0 && zone1_3_data.ultrasonic_distance <= 50) {
+        // 초음파 센서 값이 56cm 이하이고 도어 상태가 1일 때 작동
+        if (zone1_3_data.door_status == 1 && zone1_3_data.ultrasonic_distance > 0 && zone1_3_data.ultrasonic_distance <= 56) {
             printf("ALERT! Door is open, and distance below 50 cm.\n");
 
             buzzer_on();

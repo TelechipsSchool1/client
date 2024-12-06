@@ -5,7 +5,7 @@
 Zone1_3_Data collect_zone1_3_data() {
     Zone1_3_Data data;
 
-    data.ID = 1;
+    data.ID =1;
 
     // 초음파 센서 거리 측정
     data.ultrasonic_distance = get_distance();
@@ -30,7 +30,7 @@ Zone1_3_Data collect_zone1_3_data() {
 Zone1_3_Receive_Data collect_zone1_3_receive_data() {
     Zone1_3_Receive_Data receive_data;
 
-    receive_data.window_command = 1; // 1: 열림 명령, 0: 닫힘 명령 
+    receive_data.window_command ; // 1: 열림 명령, 0: 닫힘 명령 
     receive_data.sleep_alert;
 
     return receive_data;
