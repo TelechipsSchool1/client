@@ -37,18 +37,6 @@
 #define SERVO_MAX_DUTY_CYCLE 1600000    // 최대 시계 방향 속도
 #define SERVO_MIN_DUTY_CYCLE 800000    // 최대 반시계 방향 속도
 
-// 심박수 센서 설정
-#define SENSOR_ADDRESS 0x57     // MAX30102 I2C 주소
-#define FIFO_CONFIG       0x08 // FIFO 설정
-#define FIFO_WR_PTR       0x04 // FIFO Write Pointer
-#define FIFO_RD_PTR       0x06 // FIFO Read Pointer
-#define OVF_COUNTER       0x05 // FIFO Overflow Counter
-#define INTERRUPT_ENABLE  0x02 // 인터럽트 설정
-#define SPO2_CONFIG       0x0A // SpO2 설정
-#define LED1_PA           0x0C // Red LED Pulse Amplitude
-#define LED2_PA           0x0D // IR LED Pulse Amplitude
-#define INTERRUPT_STATUS  0x00 // 인터럽트 상태 레지스터
-#define FIFO_DATA         0x07 // FIFO 데이터 레지스터
 
 //압력센서 
 #define FSR406_ADC_CHANNEL 0 // FSR406이 연결된 ADC 채널
