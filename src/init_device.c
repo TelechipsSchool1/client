@@ -3,8 +3,6 @@
 #include "sonic.h"
 #include "buzzer.h"
 #include "vibrator.h"
-#include "heart.h"
-#include "air_quality.h"
 #include "button.h" 
 #include "pressure.h" 
 
