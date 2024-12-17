@@ -10,7 +10,7 @@
 #include "adc.h"
 
 static int i2c_fd = -1;
-
+//초기화 진행 
 int initialize_adc(const char *i2c_device, int i2c_address) {
     i2c_fd = open(i2c_device, O_RDWR);
     if (i2c_fd < 0) {
@@ -27,6 +27,7 @@ int initialize_adc(const char *i2c_device, int i2c_address) {
     return 0;
 }
 
+//adc 데이터값 수신
 int read_adc(int channel) {
     if (i2c_fd < 0) {
         fprintf(stderr, "ADC not initialized\n");
