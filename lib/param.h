@@ -18,7 +18,7 @@
 #define VIBRATOR_PIN 112 // 진동 모터 사용 핀
 #define BUZZER_PIN 117 // 부저 사용 핀
 #define DOOR_STATUS_PIN 113 // 도어상태 핀 
-//#define DHT_SENSOR_PIN 85 // 온습도 핀 
+#define DRIVING_PIN 85 // 운전상태 
 #define BUFFER_SIZE 128
 
 // ADC 설정
